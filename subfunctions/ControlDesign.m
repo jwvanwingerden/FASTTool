@@ -56,6 +56,11 @@ set(handles.Pitch_Minrate_textbox, 'String', num2str(handles.Control.Pitch.Minra
 set(handles.Pitch_StartupPitch_textbox, 'String', num2str(handles.Control.Pitch.StartupPitch));
 set(handles.Pitch_StartupPitchRate_textbox, 'String', num2str(handles.Control.Pitch.StartupPitchRate));
 set(handles.Pitch_StartupSpeed_textbox, 'String', num2str(handles.Control.Pitch.StartupSpeed));
+set(handles.IPC_Tilt_Kp_textbox, 'String', num2str(handles.Control.IPC.Tilt.Kp));
+set(handles.IPC_Tilt_Ki_textbox, 'String', num2str(handles.Control.IPC.Tilt.Ki));
+set(handles.IPC_Yaw_Kp_textbox, 'String', num2str(handles.Control.IPC.Yaw.Kp));
+set(handles.IPC_Yaw_Ki_textbox, 'String', num2str(handles.Control.IPC.Yaw.Ki));
+set(handles.IPC_Enable_checkbox, 'Value', (handles.Control.IPC.Enable));
 set(handles.ForeAft_MaxPitchAmplitude_textbox, 'String', num2str(handles.Control.ForeAft.MaxPitchAmplitude));
 set(handles.ForeAft_Gain_textbox, 'String', num2str(handles.Control.ForeAft.Gain));
 
@@ -420,6 +425,50 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+%% IPC Tilt Kp - text box
+function IPC_Tilt_Kp_Callback(hObject, eventdata, handles)
+if isnan(str2double(get(hObject,'String')))
+    set(hObject, 'String', num2str(handles.Control.IPC.Tilt.Kp))
+end
+handles.Control.IPC.Tilt.Kp = str2double(get(hObject,'String'));
+guidata(hObject, handles);
+function IPC_Tilt_Kp_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+%% IPC Tilt Ki - text box
+function IPC_Tilt_Ki_Callback(hObject, eventdata, handles)
+if isnan(str2double(get(hObject,'String')))
+    set(hObject, 'String', num2str(handles.Control.IPC.Tilt.Ki))
+end
+handles.Control.IPC.Tilt.Ki = str2double(get(hObject,'String'));
+guidata(hObject, handles);
+function IPC_Tilt_Ki_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+%% IPC Yaw Kp - text box
+function IPC_Yaw_Kp_Callback(hObject, eventdata, handles)
+if isnan(str2double(get(hObject,'String')))
+    set(hObject, 'String', num2str(handles.Control.IPC.Yaw.Kp))
+end
+handles.Control.IPC.Yaw.Kp = str2double(get(hObject,'String'));
+guidata(hObject, handles);
+function IPC_Yaw_Kp_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+%% IPC Yaw Ki - text box
+function IPC_Yaw_Ki_Callback(hObject, eventdata, handles)
+if isnan(str2double(get(hObject,'String')))
+    set(hObject, 'String', num2str(handles.Control.IPC.Yaw.Ki))
+end
+handles.Control.IPC.Yaw.Ki = str2double(get(hObject,'String'));
+guidata(hObject, handles);
+function IPC_Yaw_Ki_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
 %% Set pitch gain
 function Set_Pitch_Gain_Callback(hObject, eventdata, handles)
 % Disable window
@@ -454,6 +503,10 @@ open_system('FAST/Controller/Torque Control')
 function Simulink_Pitch_Callback(hObject, eventdata, handles)
 load_system('FAST')
 open_system('FAST/Controller/Pitch Control')
+
+function Simulink_IPC_Callback(hObject, eventdata, handles)
+load_system('FAST')
+open_system('FAST/Controller/Individual Pitch Control')
 
 %% Fore-Aft controller gain - text box
 function ForeAft_Gain_textbox_Callback(hObject, eventdata, handles)
@@ -513,3 +566,16 @@ function plotbutton_Callback(hObject, eventdata, handles)
     plot(Omega,Torque)
     hold off
     pause(0.1)
+
+
+% --- Executes on button press in IPC_Enable_checkbox.
+function IPC_Enable_checkbox_Callback(hObject, eventdata, handles)
+if isnan((get(hObject,'Value')))
+    set(hObject, 'Value', (handles.Control.IPC.Enable))
+end
+handles.Control.IPC.Enable = (get(hObject,'Value'));
+guidata(hObject, handles);
+function IPC_Enable_checkbox_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
